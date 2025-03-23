@@ -1,61 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Portfolio</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
+        canvas { display: block; }
+        .ui-container { position: absolute; top: 10px; left: 10px; color: white; z-index: 10; }
+        .ui-container button { background: rgba(0, 0, 0, 0.7); color: white; border: none; padding: 10px; cursor: pointer; margin: 5px; }
+    </style>
 </head>
 <body>
-
-<header>
-  <h1>🎮 My Portfolio</h1>
-  <nav>
-    <a href="#about">About</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </nav>
-</header>
-
-<main>
-  <!-- About Section -->
-  <section id="about" class="container">
-    <h2>🧑‍🎓 About Me</h2>
-    <p>Welcome to my portfolio! I'm a web developer with a love for creativity and coding.</p>
-    <button id="levelUpBtn">Level Up!</button>
-    <p id="levelText">Level: 1</p>
-  </section>
-
-  <!-- Projects Section -->
-  <section id="projects" class="container">
-    <h2>🚀 Projects</h2>
-    <div class="card-container">
-      <div class="card">
-        <h3>🎯 Game 1</h3>
-        <p>A simple platformer using HTML5 and JS.</p>
-      </div>
-      <div class="card">
-        <h3>🔧 RPG UI</h3>
-        <p>An RPG-style UI with animated interactions.</p>
-      </div>
-      <div class="card">
-        <h3>🕹️ Space Shooter</h3>
-        <p>A mini space shooter game in JS.</p>
-      </div>
+    <div class="ui-container">
+        <button onclick="showSection('about')">About</button>
+        <button onclick="showSection('projects')">Projects</button>
+        <button onclick="showSection('contact')">Contact</button>
     </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact" class="container">
-    <h2>📬 Contact</h2>
-    <p>Let's connect and create something awesome!</p>
-  </section>
-</main>
-
-<footer>
-  <p>© 2025 Portfolio</p>
-</footer>
-
-<script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer;
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            
+            const light = new THREE.AmbientLight(0xffffff, 1);
+            scene.add(light);
+            
+            // Load 3D model (woman at desk) placeholder
+            const geometry = new THREE.BoxGeometry();
+            const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 });
+            const deskModel = new THREE.Mesh(geometry, material);
+            deskModel.position.set(0, 0, -5);
+            scene.add(deskModel);
+            
+            // Sections as 3D elements
+            const sections = ['About', 'Projects', 'Contact'];
+            sections.forEach((name, i) => {
+                const textGeo = new THREE.TextGeometry(name, { font: undefined, size: 1, height: 0.2 });
+                const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+                const textMesh = new THREE.Mesh(textGeo, textMaterial);
+                textMesh.position.set(i * 3 - 3, 2, -3);
+                scene.add(textMesh);
+            });
+            
+            camera.position.z = 5;
+            animate();
+        }
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        function showSection(section) {
+            alert(`Showing ${section} section`);
+        }
+        window.onload = init;
+    </script>
 </body>
 </html>
+
